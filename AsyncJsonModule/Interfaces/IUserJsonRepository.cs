@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using AsyncJsonHomework.Models;
+using AsyncJsonModule.Models;
 
-namespace AsyncJsonHomework.Interfaces
+namespace AsyncJsonModule.Interfaces
 {
     public interface IUserJsonRepository
     {

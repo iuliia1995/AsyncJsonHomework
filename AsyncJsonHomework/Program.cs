@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AsyncJsonHomework.Interfaces;
-using AsyncJsonHomework.Repositories;
+using AsyncJsonModule.Interfaces;
+using AsyncJsonModule.Repositories;
 
 namespace AsyncJsonHomework
 {

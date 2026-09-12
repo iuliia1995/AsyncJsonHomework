@@ -1,3 +1,9 @@
 <Solution>
+  <Folder Name="/Data/">
+    <File Path="Data/users.json" />
+    <File Path="notes.json" />
+  </Folder>
   <Project Path="AsyncJsonHomework/AsyncJsonHomework.csproj" />
+  <Project Path="AsyncJsonModule/AsyncJsonModule.csproj" Id="5c8741a7-9ed8-4c7f-bc9c-e4ab3f70e1fa" />
+  <Project Path="AsyncJsonWeb/AsyncJsonWeb.csproj" Id="75c5e430-4ac9-4b25-8d00-6d96243a4af5" />
 </Solution>

@@ -1,18 +1,19 @@
-﻿using System;
+﻿using AsyncJsonModule.Interfaces;
+using AsyncJsonModule.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AsyncJsonHomework.Interfaces;
-using AsyncJsonHomework.Models;
 
-namespace AsyncJsonHomework.Repositories
+namespace AsyncJsonModule.Repositories
 {
     public class UserJsonRepository : IUserJsonRepository
     {
-        private static readonly string FilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Data", "users.json"));
+        private static readonly string FilePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Data", "users.json"));
 
         public async Task<List<User>> LoadUsersAsync()
         {
@@ -165,7 +166,11 @@ namespace AsyncJsonHomework.Repositories
         {
             try
             {
-                var options = new JsonSerializerOptions { WriteIndented = true };
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                };
                 string json = JsonSerializer.Serialize(users, options);
 
                 using (var fileStream = new FileStream(FilePath, FileMode.Create, FileAccess.Write,
