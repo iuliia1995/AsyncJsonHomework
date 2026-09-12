@@ -1,3 +1,14 @@
-[
-  {"id":1,"email":"test@example.com","login":"test_user","password":"qwerty123"}
+﻿[
+  {
+    "id": 1,
+    "email": "ivan_NEW@mail.ru",
+    "login": "ivan_new_login",
+    "password": "new_password"
+  },
+  {
+    "id": 2,
+    "email": "roma@mail.ru",
+    "login": "roman_romashka",
+    "password": "12345678qwerty"
+  }
 ]
