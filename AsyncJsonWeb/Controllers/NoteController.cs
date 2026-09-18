@@ -74,7 +74,7 @@ namespace AsyncJsonWeb.Controllers
             return Ok($"Заметка ID={id} удалена.");
         }
 
-        // ==================== ДОМАШНЕЕ ЗАДАНИЕ ====================
+        // ДЗ
 
         [HttpGet("owner/{ownerId}")]
         public async Task<ActionResult<List<Note>>> GetNotesByOwnerId(int ownerId)

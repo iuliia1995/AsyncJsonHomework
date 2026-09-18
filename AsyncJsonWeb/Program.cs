@@ -7,6 +7,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddSingleton<INoteJsonRepository, NoteJsonRepository>();
 builder.Services.AddSingleton<IUserJsonRepository, UserJsonRepository>();
+builder.Services.AddSingleton<IEventJsonRepository, EventJsonRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

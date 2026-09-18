@@ -13,7 +13,6 @@ namespace AsyncJsonModule.Repositories
 {
     public class NoteJsonRepository : INoteJsonRepository
     {
-        // Файл заметок лежит рядом с users.json в папке Data корня решения
         private static readonly string FilePath = Path.GetFullPath(
             Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Data", "notes.json"));
 
@@ -46,7 +45,7 @@ namespace AsyncJsonModule.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при загрузке заметок: {ex.Message}");
+                Console.WriteLine($"Ошибка при загрузке заметок {ex.Message}");
                 return new List<Note>();
             }
         }
@@ -75,11 +74,11 @@ namespace AsyncJsonModule.Repositories
 
                 notes.Add(newNote);
                 await SaveNotesAsync(notes);
-                Console.WriteLine($"[УСПЕХ] Заметка добавлена. ID: {nextId}, OwnerId: {ownerId}");
+                Console.WriteLine($"[УСПЕХ] Заметка добавлена. ID {nextId}, OwnerId {ownerId}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ОШИБКА] Не удалось добавить заметку: {ex.Message}");
+                Console.WriteLine($"[ОШИБКА] Не удалось добавить заметку {ex.Message}");
             }
         }
 
@@ -104,7 +103,7 @@ namespace AsyncJsonModule.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при обновлении заметки: {ex.Message}");
+                Console.WriteLine($"Ошибка при обновлении заметки {ex.Message}");
                 return false;
             }
         }
@@ -128,7 +127,7 @@ namespace AsyncJsonModule.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при удалении заметки: {ex.Message}");
+                Console.WriteLine($"Ошибка при удалении заметки {ex.Message}");
                 return false;
             }
         }
@@ -140,7 +139,7 @@ namespace AsyncJsonModule.Repositories
                 var options = new JsonSerializerOptions
                 {
                     WriteIndented = true,
-                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Чтобы русские буквы писались читаемо
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Чтоб русские буквы писались читаемо
                 };
                 string json = JsonSerializer.Serialize(notes, options);
 
@@ -153,11 +152,10 @@ namespace AsyncJsonModule.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при сохранении заметок: {ex.Message}");
+                Console.WriteLine($"Ошибка при сохранении заметок {ex.Message}");
             }
         }
 
-        // ==================== ДОМАШНЕЕ ЗАДАНИЕ ====================
         // Заглушки для методов, работающих с OwnerId.
         // Реальная реализация будет добавлена после подключения базы данных.
 

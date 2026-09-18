@@ -13,7 +13,7 @@ namespace AsyncJsonModule.Interfaces
         Task<bool> DeleteNoteByIdAsync(int id);
         Task SaveNotesAsync(List<Note> notes);
 
-        // ДОМАШНЕЕ ЗАДАНИЕ
+        // лаб
         Task<List<Note>> GetNotesByOwnerIdAsync(int ownerId);
         Task<bool> DeleteNotesByOwnerIdAsync(int ownerId);
     }
