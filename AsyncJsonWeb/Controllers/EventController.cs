@@ -10,50 +10,39 @@ namespace AsyncJsonWeb.Controllers
     [Route("api/[controller]")]
     public class EventController : ControllerBase
     {
-        private readonly IEventJsonRepository _eventRepository;
+        private readonly IEventService _eventService;
 
-        public EventController(IEventJsonRepository eventRepository)
+        public EventController(IEventService eventService)
         {
-            _eventRepository = eventRepository;
+            _eventService = eventService;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Event>>> GetAllEvents()
         {
-            var events = await _eventRepository.LoadEventsAsync();
+            var events = await _eventService.GetAllEventsAsync();
             return Ok(events);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Event>> GetEventById(int id)
         {
-            var ev = await _eventRepository.GetEventByIdAsync(id);
+            var ev = await _eventService.GetEventByIdAsync(id);
             if (ev == null || ev.id == 0)
-            {
                 return NotFound($"Событие с ID={id} не найдено.");
-            }
             return Ok(ev);
         }
 
-        // Задание 4. валидация данных выполняется внутри репозитория (AddEventAsync).
         [HttpPost]
         public async Task<ActionResult> AddEvent([FromBody] Event newEvent)
         {
             if (newEvent == null)
-            {
                 return BadRequest("Тело запроса пустое.");
-            }
 
-            // Задание 4. полная валидация — в репозитории,базовая проверка.
-            if (string.IsNullOrWhiteSpace(newEvent.name) ||
-                string.IsNullOrWhiteSpace(newEvent.description) ||
-                newEvent.date < System.DateTime.Now ||
-                newEvent.MaxParticipants <= 0)
-            {
-                return BadRequest("Некорректные данные события - имя/описание пустые, дата в прошлом или MaxParticipants <= 0.");
-            }
+            var result = await _eventService.AddEventAsync(newEvent);
+            if (!result)
+                return BadRequest("Некорректные данные события. Проверьте: name/description не пустые, дата не в прошлом, MaxParticipants > 0.");
 
-            await _eventRepository.AddEventAsync(newEvent);
             return Ok("Событие успешно добавлено.");
         }
 
@@ -61,42 +50,34 @@ namespace AsyncJsonWeb.Controllers
         public async Task<ActionResult> UpdateEvent(int id, [FromBody] Event updatedEvent)
         {
             if (updatedEvent == null)
-            {
                 return BadRequest("Тело запроса пустое.");
-            }
 
-            var result = await _eventRepository.UpdateEventByIdAsync(id, updatedEvent);
+            var result = await _eventService.UpdateEventAsync(id, updatedEvent);
             if (!result)
-            {
                 return NotFound($"Событие с ID={id} не найдено.");
-            }
             return Ok($"Событие ID={id} обновлено.");
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteEvent(int id)
         {
-            var result = await _eventRepository.DeleteEventByIdAsync(id);
+            var result = await _eventService.DeleteEventAsync(id);
             if (!result)
-            {
                 return NotFound($"Событие с ID={id} не найдено.");
-            }
             return Ok($"Событие ID={id} удалено.");
         }
 
-        // Задание 2. метод, возвращающий будущие событие
         [HttpGet("future")]
         public async Task<ActionResult<List<Event>>> GetFutureEvents()
         {
-            var events = await _eventRepository.GetFutureEventsAsync();
+            var events = await _eventService.GetFutureEventsAsync();
             return Ok(events);
         }
 
-        // Задание 3. метод поиска событие по названию
         [HttpGet("search/{name}")]
         public async Task<ActionResult<List<Event>>> SearchEventsByName(string name)
         {
-            var events = await _eventRepository.SearchEventsByNameAsync(name);
+            var events = await _eventService.SearchEventsByNameAsync(name);
             return Ok(events);
         }
     }

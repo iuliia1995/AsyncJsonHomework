@@ -10,28 +10,26 @@ namespace AsyncJsonWeb.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserJsonRepository _userRepository;
+        private readonly IUserService _userService;
 
-        public UserController(IUserJsonRepository userRepository)
+        public UserController(IUserService userService)
         {
-            _userRepository = userRepository;
+            _userService = userService;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetAllUsers()
         {
-            var users = await _userRepository.LoadUsersAsync();
+            var users = await _userService.GetAllUsersAsync();
             return Ok(users);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserById(int id)
         {
-            var user = await _userRepository.GetUserByIdAsync(id);
+            var user = await _userService.GetUserByIdAsync(id);
             if (user == null || user.id == 0)
-            {
                 return NotFound($"Пользователь с ID={id} не найден.");
-            }
             return Ok(user);
         }
 
@@ -39,11 +37,12 @@ namespace AsyncJsonWeb.Controllers
         public async Task<ActionResult> AddUser([FromBody] User newUser)
         {
             if (newUser == null)
-            {
                 return BadRequest("Тело запроса пустое.");
-            }
 
-            await _userRepository.AddUserAsync(newUser.email, newUser.login, newUser.password);
+            var result = await _userService.AddUserAsync(newUser.email, newUser.login, newUser.password);
+            if (!result)
+                return BadRequest("Некорректные данные. email/login/password не должны быть пустыми, email должен содержать @.");
+
             return Ok("Пользователь успешно добавлен.");
         }
 
@@ -51,27 +50,20 @@ namespace AsyncJsonWeb.Controllers
         public async Task<ActionResult> UpdateUser(int id, [FromBody] User updatedUser)
         {
             if (updatedUser == null)
-            {
                 return BadRequest("Тело запроса пустое.");
-            }
 
-            var result = await _userRepository.UpdateUserByIdAsync(
-                id, updatedUser.email, updatedUser.login, updatedUser.password);
+            var result = await _userService.UpdateUserAsync(id, updatedUser.email, updatedUser.login, updatedUser.password);
             if (!result)
-            {
-                return NotFound($"Пользователь с ID={id} не найден.");
-            }
+                return NotFound($"Пользователь с ID={id} не найден или данные некорректны.");
             return Ok($"Пользователь ID={id} обновлён.");
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteUser(int id)
         {
-            var result = await _userRepository.DeleteUserByIdAsync(id);
+            var result = await _userService.DeleteUserAsync(id);
             if (!result)
-            {
                 return NotFound($"Пользователь с ID={id} не найден.");
-            }
             return Ok($"Пользователь ID={id} удалён.");
         }
     }
