@@ -1,0 +1,30 @@
+﻿/* ТЁМНАЯ ТЕМА  */
+:root {
+    --bg-main: #1e1e2e; 
+    --bg-secondary: #2a2a3c; 
+    --bg-card: #313145; 
+    --bg-hover: #3d3d55; 
+    --accent: #7aa2f7; 
+    --text-main: #e0e0e0; 
+    --border: #444466;
+
+    --color-success: #4caf50; 
+    --color-error: #f44336; 
+    --color-warning: #ff9800; 
+    --color-info: #2196f3; 
+}
+
+/* СВЕТЛАЯ ТЕМА */
+[data-theme="light"] {
+    --bg-main: #f5f5fa;
+    --bg-secondary: #e8e8f0;
+    --bg-card: #ffffff;
+    --bg-hover: #dcdce6;
+    --accent: #3b5bdb;
+    --text-main: #1a1a1a;
+    --border: #c5c5d0;
+    --color-success: #2e7d32;
+    --color-error: #c62828;
+    --color-warning: #ef6c00;
+    --color-info: #1565c0;
+}
