@@ -5,7 +5,9 @@
     <File Path="notes.json" />
   </Folder>
   <Folder Name="/Docs/">
+    <File Path="error-handlers-audit.md" />
     <File Path="README.md" />
+    <File Path="theme.css" />
   </Folder>
   <Project Path="AsyncJsonHomework/AsyncJsonHomework.csproj" />
   <Project Path="AsyncJsonModule/AsyncJsonModule.csproj" Id="5c8741a7-9ed8-4c7f-bc9c-e4ab3f70e1fa" />
