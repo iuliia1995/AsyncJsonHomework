@@ -1,20 +1,27 @@
-﻿using System;
+﻿using AsyncJsonModule.Interfaces;
+using AsyncJsonModule.Models;
+using AsyncJsonModule.Repositories;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AsyncJsonModule.Interfaces;
-using AsyncJsonModule.Models;
-using System.Text.Encodings.Web;
 
-namespace AsyncJsonModule.Repositories
+namespace AsyncJsonModule.Repositories.Json
 {
     public class NoteJsonRepository : INoteJsonRepository
     {
         private static readonly string FilePath = Path.GetFullPath(
             Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Data", "notes.json"));
+
+        private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
 
         public async Task<List<Note>> LoadNotesAsync()
         {
@@ -22,8 +29,7 @@ namespace AsyncJsonModule.Repositories
             {
                 if (!File.Exists(FilePath))
                 {
-                    // Создаём пустой файл заметок, если его нет
-                    Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
+                    Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!);
                     await File.WriteAllTextAsync(FilePath, "[]");
                     return new List<Note>();
                 }
@@ -36,36 +42,32 @@ namespace AsyncJsonModule.Repositories
                     json = await reader.ReadToEndAsync();
                 }
 
-                if (string.IsNullOrWhiteSpace(json))
-                {
-                    json = "[]";
-                }
+                if (string.IsNullOrWhiteSpace(json)) return new List<Note>();
 
                 return JsonSerializer.Deserialize<List<Note>>(json) ?? new List<Note>();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при загрузке заметок {ex.Message}");
+                Console.WriteLine($"Ошибка при загрузке заметок: {ex.Message}");
                 return new List<Note>();
             }
         }
 
-        public async Task<Note> GetNoteByIdAsync(int id)
+        public async Task<Note> GetNoteByIdAsync(Guid id)
         {
             var notes = await LoadNotesAsync();
             return notes.FirstOrDefault(n => n.id == id) ?? new Note();
         }
 
-        public async Task AddNoteAsync(string title, string content, int ownerId)
+        public async Task AddNoteAsync(string title, string content, Guid ownerId)
         {
             try
             {
                 var notes = await LoadNotesAsync();
-                int nextId = notes.Any() ? notes.Max(n => n.id) + 1 : 1;
 
                 var newNote = new Note
                 {
-                    id = nextId,
+                    id = Guid.NewGuid(),
                     title = title,
                     content = content,
                     ownerId = ownerId,
@@ -74,60 +76,50 @@ namespace AsyncJsonModule.Repositories
 
                 notes.Add(newNote);
                 await SaveNotesAsync(notes);
-                Console.WriteLine($"[УСПЕХ] Заметка добавлена. ID {nextId}, OwnerId {ownerId}");
+                Console.WriteLine($"[УСПЕХ] Заметка добавлена. ID: {newNote.id}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ОШИБКА] Не удалось добавить заметку {ex.Message}");
+                Console.WriteLine($"[ОШИБКА] Не удалось добавить заметку: {ex.Message}");
             }
         }
 
-        public async Task<bool> UpdateNoteByIdAsync(int id, string newTitle, string newContent)
+        public async Task<bool> UpdateNoteByIdAsync(Guid id, string newTitle, string newContent)
         {
             try
             {
                 var notes = await LoadNotesAsync();
                 var note = notes.FirstOrDefault(n => n.id == id);
-                if (note == null)
-                {
-                    Console.WriteLine($"Заметка с ID={id} не найдена.");
-                    return false;
-                }
+                if (note == null) return false;
 
                 note.title = newTitle;
                 note.content = newContent;
 
                 await SaveNotesAsync(notes);
-                Console.WriteLine($"[УСПЕХ] Заметка ID={id} обновлена.");
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при обновлении заметки {ex.Message}");
+                Console.WriteLine($"Ошибка при обновлении заметки: {ex.Message}");
                 return false;
             }
         }
 
-        public async Task<bool> DeleteNoteByIdAsync(int id)
+        public async Task<bool> DeleteNoteByIdAsync(Guid id)
         {
             try
             {
                 var notes = await LoadNotesAsync();
                 var note = notes.FirstOrDefault(n => n.id == id);
-                if (note == null)
-                {
-                    Console.WriteLine($"Заметка с ID={id} не найдена.");
-                    return false;
-                }
+                if (note == null) return false;
 
                 notes.Remove(note);
                 await SaveNotesAsync(notes);
-                Console.WriteLine($"[УСПЕХ] Заметка ID={id} удалена.");
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при удалении заметки {ex.Message}");
+                Console.WriteLine($"Ошибка при удалении заметки: {ex.Message}");
                 return false;
             }
         }
@@ -136,12 +128,7 @@ namespace AsyncJsonModule.Repositories
         {
             try
             {
-                var options = new JsonSerializerOptions
-                {
-                    WriteIndented = true,
-                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Чтоб русские буквы писались читаемо
-                };
-                string json = JsonSerializer.Serialize(notes, options);
+                string json = JsonSerializer.Serialize(notes, _jsonOptions);
 
                 using (var fileStream = new FileStream(FilePath, FileMode.Create, FileAccess.Write,
                     FileShare.None, bufferSize: 4096, useAsync: true))
@@ -152,22 +139,20 @@ namespace AsyncJsonModule.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при сохранении заметок {ex.Message}");
+                Console.WriteLine($"Ошибка при сохранении заметок: {ex.Message}");
             }
         }
 
-        // Заглушки для методов, работающих с OwnerId.
-        // Реальная реализация будет добавлена после подключения базы данных.
-
-        public Task<List<Note>> GetNotesByOwnerIdAsync(int ownerId)
+        // ДЗ заглушки
+        public Task<List<Note>> GetNotesByOwnerIdAsync(Guid ownerId)
         {
-            Console.WriteLine($"[ЗАГЛУШКА] GetNotesByOwnerIdAsync({ownerId}) — метод пока не реализован (ожидает БД).");
+            Console.WriteLine($"[ЗАГЛУШКА] GetNotesByOwnerIdAsync({ownerId}) — ожидает БД.");
             return Task.FromResult(new List<Note>());
         }
 
-        public Task<bool> DeleteNotesByOwnerIdAsync(int ownerId)
+        public Task<bool> DeleteNotesByOwnerIdAsync(Guid ownerId)
         {
-            Console.WriteLine($"[ЗАГЛУШКА] DeleteNotesByOwnerIdAsync({ownerId}) — метод пока не реализован (ожидает БД).");
+            Console.WriteLine($"[ЗАГЛУШКА] DeleteNotesByOwnerIdAsync({ownerId}) — ожидает БД.");
             return Task.FromResult(false);
         }
     }

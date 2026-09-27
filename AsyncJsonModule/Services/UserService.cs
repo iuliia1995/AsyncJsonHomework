@@ -20,12 +20,11 @@ namespace AsyncJsonModule.Services
             return await _userRepository.LoadUsersAsync();
         }
 
-        public async Task<User> GetUserByIdAsync(int id)
+        public async Task<User> GetUserByIdAsync(Guid id)
         {
             return await _userRepository.GetUserByIdAsync(id);
         }
 
-        // Логика валидации — здесь, в сервисе. Репозиторий просто пишет в файл.
         public async Task<bool> AddUserAsync(string email, string login, string password)
         {
             if (string.IsNullOrWhiteSpace(email) ||
@@ -46,7 +45,7 @@ namespace AsyncJsonModule.Services
             return true;
         }
 
-        public async Task<bool> UpdateUserAsync(int id, string email, string login, string password)
+        public async Task<bool> UpdateUserAsync(Guid id, string email, string login, string password)
         {
             if (string.IsNullOrWhiteSpace(email) ||
                 string.IsNullOrWhiteSpace(login) ||
@@ -59,7 +58,7 @@ namespace AsyncJsonModule.Services
             return await _userRepository.UpdateUserByIdAsync(id, email, login, password);
         }
 
-        public async Task<bool> DeleteUserAsync(int id)
+        public async Task<bool> DeleteUserAsync(Guid id)
         {
             return await _userRepository.DeleteUserByIdAsync(id);
         }

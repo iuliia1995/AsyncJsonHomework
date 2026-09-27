@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AsyncJsonModule.Models;
 
-namespace AsyncJsonModule.Interfaces
+namespace AsyncJsonModule.Repositories
 {
     public interface IUserJsonRepository
     {
         Task<List<User>> LoadUsersAsync();
-        Task<User> GetUserByIdAsync(int id);
-        Task<bool> UpdateUserByIdAsync(int id, string newEmail, string newLogin, string newPassword);
-        Task AddUserAsync(string newEmail, string newLogin, string newPassword);
+        Task<User> GetUserByIdAsync(Guid id);
+        Task AddUserAsync(string email, string login, string password);
+        Task<bool> UpdateUserByIdAsync(Guid id, string email, string login, string password);
+        Task<bool> DeleteUserByIdAsync(Guid id);
         Task SaveUsersAsync(List<User> users);
-        Task<bool> DeleteUserByIdAsync(int id);
     }
 }

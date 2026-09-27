@@ -20,12 +20,12 @@ namespace AsyncJsonModule.Services
             return await _noteRepository.LoadNotesAsync();
         }
 
-        public async Task<Note> GetNoteByIdAsync(int id)
+        public async Task<Note> GetNoteByIdAsync(Guid id)
         {
             return await _noteRepository.GetNoteByIdAsync(id);
         }
 
-        public async Task<bool> AddNoteAsync(string title, string content, int ownerId)
+        public async Task<bool> AddNoteAsync(string title, string content, Guid ownerId)
         {
             if (string.IsNullOrWhiteSpace(title))
             {
@@ -39,9 +39,9 @@ namespace AsyncJsonModule.Services
                 return false;
             }
 
-            if (ownerId <= 0)
+            if (ownerId == Guid.Empty)
             {
-                Console.WriteLine("[ОШИБКА ВАЛИДАЦИИ] OwnerId должен быть больше 0.");
+                Console.WriteLine("[ОШИБКА ВАЛИДАЦИИ] OwnerId не может быть пустым.");
                 return false;
             }
 
@@ -49,7 +49,7 @@ namespace AsyncJsonModule.Services
             return true;
         }
 
-        public async Task<bool> UpdateNoteAsync(int id, string title, string content)
+        public async Task<bool> UpdateNoteAsync(Guid id, string title, string content)
         {
             if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(content))
             {
@@ -60,18 +60,18 @@ namespace AsyncJsonModule.Services
             return await _noteRepository.UpdateNoteByIdAsync(id, title, content);
         }
 
-        public async Task<bool> DeleteNoteAsync(int id)
+        public async Task<bool> DeleteNoteAsync(Guid id)
         {
             return await _noteRepository.DeleteNoteByIdAsync(id);
         }
 
-        public async Task<List<Note>> GetNotesByOwnerIdAsync(int ownerId)
+        public async Task<List<Note>> GetNotesByOwnerIdAsync(Guid ownerId)
         {
             Console.WriteLine($"[ЗАГЛУШКА] GetNotesByOwnerIdAsync({ownerId}) — ожидает БД.");
             return await Task.FromResult(new List<Note>());
         }
 
-        public async Task<bool> DeleteNotesByOwnerIdAsync(int ownerId)
+        public async Task<bool> DeleteNotesByOwnerIdAsync(Guid ownerId)
         {
             Console.WriteLine($"[ЗАГЛУШКА] DeleteNotesByOwnerIdAsync({ownerId}) — ожидает БД.");
             return await Task.FromResult(false);

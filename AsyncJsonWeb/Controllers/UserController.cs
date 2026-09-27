@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AsyncJsonModule.Interfaces;
 using AsyncJsonModule.Models;
@@ -24,11 +25,11 @@ namespace AsyncJsonWeb.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUserById(int id)
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<User>> GetUserById(Guid id)
         {
             var user = await _userService.GetUserByIdAsync(id);
-            if (user == null || user.id == 0)
+            if (user == null || user.id == Guid.Empty)
                 return NotFound($"Пользователь с ID={id} не найден.");
             return Ok(user);
         }
@@ -41,13 +42,13 @@ namespace AsyncJsonWeb.Controllers
 
             var result = await _userService.AddUserAsync(newUser.email, newUser.login, newUser.password);
             if (!result)
-                return BadRequest("Некорректные данные. email/login/password не должны быть пустыми, email должен содержать @.");
+                return BadRequest("Некорректные данные: email/login/password не должны быть пустыми, email должен содержать @.");
 
             return Ok("Пользователь успешно добавлен.");
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateUser(int id, [FromBody] User updatedUser)
+        [HttpPut("{id:guid}")]
+        public async Task<ActionResult> UpdateUser(Guid id, [FromBody] User updatedUser)
         {
             if (updatedUser == null)
                 return BadRequest("Тело запроса пустое.");
@@ -58,8 +59,8 @@ namespace AsyncJsonWeb.Controllers
             return Ok($"Пользователь ID={id} обновлён.");
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteUser(int id)
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult> DeleteUser(Guid id)
         {
             var result = await _userService.DeleteUserAsync(id);
             if (!result)

@@ -1,20 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AsyncJsonModule.Models;
 
-namespace AsyncJsonModule.Interfaces
+namespace AsyncJsonModule.Repositories
 {
     public interface INoteJsonRepository
     {
         Task<List<Note>> LoadNotesAsync();
-        Task<Note> GetNoteByIdAsync(int id);
-        Task AddNoteAsync(string title, string content, int ownerId);
-        Task<bool> UpdateNoteByIdAsync(int id, string newTitle, string newContent);
-        Task<bool> DeleteNoteByIdAsync(int id);
+        Task<Note> GetNoteByIdAsync(Guid id);
+        Task AddNoteAsync(string title, string content, Guid ownerId);
+        Task<bool> UpdateNoteByIdAsync(Guid id, string newTitle, string newContent);
+        Task<bool> DeleteNoteByIdAsync(Guid id);
         Task SaveNotesAsync(List<Note> notes);
-
-        // лаб
-        Task<List<Note>> GetNotesByOwnerIdAsync(int ownerId);
-        Task<bool> DeleteNotesByOwnerIdAsync(int ownerId);
+        Task<List<Note>> GetNotesByOwnerIdAsync(Guid ownerId);
+        Task<bool> DeleteNotesByOwnerIdAsync(Guid ownerId);
     }
 }

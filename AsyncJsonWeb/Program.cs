@@ -1,6 +1,7 @@
 using AsyncJsonModule.Interfaces;
-using AsyncJsonModule.Repositories;
+using AsyncJsonModule.Repositories.Json;
 using AsyncJsonModule.Services;
+using AsyncJsonModule.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);

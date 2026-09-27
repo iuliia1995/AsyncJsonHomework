@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AsyncJsonModule.Interfaces;
 using AsyncJsonModule.Models;
@@ -24,11 +25,11 @@ namespace AsyncJsonWeb.Controllers
             return Ok(events);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Event>> GetEventById(int id)
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<Event>> GetEventById(Guid id)
         {
             var ev = await _eventService.GetEventByIdAsync(id);
-            if (ev == null || ev.id == 0)
+            if (ev == null || ev.id == Guid.Empty)
                 return NotFound($"Событие с ID={id} не найдено.");
             return Ok(ev);
         }
@@ -46,8 +47,8 @@ namespace AsyncJsonWeb.Controllers
             return Ok("Событие успешно добавлено.");
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateEvent(int id, [FromBody] Event updatedEvent)
+        [HttpPut("{id:guid}")]
+        public async Task<ActionResult> UpdateEvent(Guid id, [FromBody] Event updatedEvent)
         {
             if (updatedEvent == null)
                 return BadRequest("Тело запроса пустое.");
@@ -58,8 +59,8 @@ namespace AsyncJsonWeb.Controllers
             return Ok($"Событие ID={id} обновлено.");
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteEvent(int id)
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult> DeleteEvent(Guid id)
         {
             var result = await _eventService.DeleteEventAsync(id);
             if (!result)

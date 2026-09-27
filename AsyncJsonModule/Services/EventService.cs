@@ -20,10 +20,11 @@ namespace AsyncJsonModule.Services
             return await _eventRepository.LoadEventsAsync();
         }
 
-        public async Task<Event> GetEventByIdAsync(int id)
+        public async Task<Event> GetEventByIdAsync(Guid id)
         {
             return await _eventRepository.GetEventByIdAsync(id);
         }
+
         public async Task<bool> AddEventAsync(Event newEvent)
         {
             if (newEvent == null)
@@ -60,7 +61,7 @@ namespace AsyncJsonModule.Services
             return true;
         }
 
-        public async Task<bool> UpdateEventAsync(int id, Event updatedEvent)
+        public async Task<bool> UpdateEventAsync(Guid id, Event updatedEvent)
         {
             if (updatedEvent == null)
             {
@@ -71,7 +72,7 @@ namespace AsyncJsonModule.Services
             return await _eventRepository.UpdateEventByIdAsync(id, updatedEvent);
         }
 
-        public async Task<bool> DeleteEventAsync(int id)
+        public async Task<bool> DeleteEventAsync(Guid id)
         {
             return await _eventRepository.DeleteEventByIdAsync(id);
         }

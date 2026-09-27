@@ -1,4 +1,7 @@
-﻿using System;
+﻿using AsyncJsonModule.Interfaces;
+using AsyncJsonModule.Models;
+using AsyncJsonModule.Repositories;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,10 +9,8 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AsyncJsonModule.Interfaces;
-using AsyncJsonModule.Models;
 
-namespace AsyncJsonModule.Repositories
+namespace AsyncJsonModule.Repositories.Json
 {
     public class EventJsonRepository : IEventJsonRepository
     {
@@ -28,7 +29,7 @@ namespace AsyncJsonModule.Repositories
             {
                 if (!File.Exists(FilePath))
                 {
-                    Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
+                    Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!);
                     await File.WriteAllTextAsync(FilePath, "[]");
                     return new List<Event>();
                 }
@@ -41,21 +42,18 @@ namespace AsyncJsonModule.Repositories
                     json = await reader.ReadToEndAsync();
                 }
 
-                if (string.IsNullOrWhiteSpace(json))
-                {
-                    json = "[]";
-                }
+                if (string.IsNullOrWhiteSpace(json)) return new List<Event>();
 
                 return JsonSerializer.Deserialize<List<Event>>(json) ?? new List<Event>();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при загрузке событий {ex.Message}");
+                Console.WriteLine($"Ошибка при загрузке событий: {ex.Message}");
                 return new List<Event>();
             }
         }
 
-        public async Task<Event> GetEventByIdAsync(int id)
+        public async Task<Event> GetEventByIdAsync(Guid id)
         {
             var events = await LoadEventsAsync();
             return events.FirstOrDefault(e => e.id == id) ?? new Event();
@@ -65,43 +63,22 @@ namespace AsyncJsonModule.Repositories
         {
             try
             {
-                // Задание 4. проверка данных при создании события
-                if (string.IsNullOrWhiteSpace(newEvent.name))
-                {
-                    Console.WriteLine("[ОШИБКА ВАЛИДАЦИИ] Название не должно быть пустым.");
-                    return;
-                }
-                if (string.IsNullOrWhiteSpace(newEvent.description))
-                {
-                    Console.WriteLine("[ОШИБКА ВАЛИДАЦИИ] Описание не должно быть пустым.");
-                    return;
-                }
-                if (newEvent.date < DateTime.Now)
-                {
-                    Console.WriteLine("[ОШИБКА ВАЛИДАЦИИ] Дата не должна быть в прошлом.");
-                    return;
-                }
-                if (newEvent.MaxParticipants <= 0)
-                {
-                    Console.WriteLine("[ОШИБКА ВАЛИДАЦИИ] Количество участников должно быть больше 0.");
-                    return;
-                }
+                if (newEvent == null) return;
 
                 var events = await LoadEventsAsync();
-                int nextId = events.Any() ? events.Max(e => e.id) + 1 : 1;
-                newEvent.id = nextId;
+                newEvent.id = Guid.NewGuid();
 
                 events.Add(newEvent);
                 await SaveEventsAsync(events);
-                Console.WriteLine($"[УСПЕХ] Событие добавлено ID {nextId}");
+                Console.WriteLine($"[УСПЕХ] Событие добавлено. ID: {newEvent.id}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ОШИБКА] Не удалось добавить событие {ex.Message}");
+                Console.WriteLine($"[ОШИБКА] Не удалось добавить событие: {ex.Message}");
             }
         }
 
-        public async Task<bool> UpdateEventByIdAsync(int id, Event updatedEvent)
+        public async Task<bool> UpdateEventByIdAsync(Guid id, Event updatedEvent)
         {
             try
             {
@@ -120,12 +97,12 @@ namespace AsyncJsonModule.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при обновлении события {ex.Message}");
+                Console.WriteLine($"Ошибка при обновлении события: {ex.Message}");
                 return false;
             }
         }
 
-        public async Task<bool> DeleteEventByIdAsync(int id)
+        public async Task<bool> DeleteEventByIdAsync(Guid id)
         {
             try
             {
@@ -139,7 +116,7 @@ namespace AsyncJsonModule.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при удалении события {ex.Message}");
+                Console.WriteLine($"Ошибка при удалении события: {ex.Message}");
                 return false;
             }
         }
@@ -159,22 +136,19 @@ namespace AsyncJsonModule.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при сохранении событий {ex.Message}");
+                Console.WriteLine($"Ошибка при сохранении событий: {ex.Message}");
             }
         }
 
-        // Задание 2. возвращаем будущие события
         public async Task<List<Event>> GetFutureEventsAsync()
         {
             var events = await LoadEventsAsync();
             return events.Where(e => e.date > DateTime.Now).ToList();
         }
 
-        // Задание 3. поиск событий по названию
         public async Task<List<Event>> SearchEventsByNameAsync(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) return new List<Event>();
-
             var events = await LoadEventsAsync();
             return events.Where(e => e.name.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
         }
