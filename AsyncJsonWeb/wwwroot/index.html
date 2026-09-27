@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsyncJsonWeb — Главная</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>AsyncJsonWeb</h1>
+        <nav>
+            <a href="index.html" class="active">Главная</a>
+            <a href="users.html">Пользователи</a>
+            <a href="notes.html">Заметки</a>
+            <a href="events.html">События</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Добро пожаловать в AsyncJsonWeb</h2>
+            <p>Учебный проект на ASP.NET Core с хранением данных в JSON-файлах</p>
+        </section>
+
+        <section class="grid-cards">
+            <div class="card">
+                <h3>Пользователи</h3>
+                <p>Управление пользователями: создание, редактирование, удаление.</p>
+                <br>
+                <a href="users.html" class="btn btn-primary">Перейти</a>
+            </div>
+
+            <div class="card">
+                <h3>Заметки</h3>
+                <p>Работа с заметками. Каждая заметка привязана к пользователю.</p>
+                <br>
+                <a href="notes.html" class="btn btn-primary">Перейти</a>
+            </div>
+
+            <div class="card">
+                <h3>События</h3>
+                <p>Создание событий, поиск по названию, просмотр будущих событий.</p>
+                <br>
+                <a href="events.html" class="btn btn-primary">Перейти</a>
+            </div>
+        </section>
+
+        <section class="card" style="margin-top: 30px;">
+            <h3>Доступные API</h3>
+            <p>Все API доступны через Swagger: <a href="/swagger" style="color: var(--accent);">/swagger</a></p>
+            <ul style="margin-top: 12px; margin-left: 20px; opacity: 0.85;">
+                <li><strong>/api/user</strong> — пользователи</li>
+                <li><strong>/api/note</strong> — заметки</li>
+                <li><strong>/api/event</strong> — события</li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>
