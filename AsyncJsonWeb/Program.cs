@@ -22,6 +22,9 @@ builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<INoteService, NoteService>();
 builder.Services.AddSingleton<IEventService, EventService>();
 
+builder.Services.AddSingleton<IAuthService, AuthService>();
+builder.Services.AddSingleton<IRegisterService, RegisterService>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

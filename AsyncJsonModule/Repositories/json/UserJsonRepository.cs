@@ -125,6 +125,8 @@ namespace AsyncJsonModule.Repositories.Json
             }
         }
 
+
+
         public async Task SaveUsersAsync(List<User> users)
         {
             try
@@ -142,6 +144,17 @@ namespace AsyncJsonModule.Repositories.Json
             {
                 Console.WriteLine($"Ошибка при сохранении пользователей: {ex.Message}");
             }
+        }
+        public async Task<User?> GetByLoginAsync(string login)
+        {
+            var users = await LoadUsersAsync();
+            return users.FirstOrDefault(u => u.login == login);
+        }
+
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            var users = await LoadUsersAsync();
+            return users.FirstOrDefault(u => u.email == email);
         }
     }
 }

@@ -12,10 +12,17 @@ namespace AsyncJsonWeb.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IAuthService _authService;
+        private readonly IRegisterService _registerService;
 
-        public UserController(IUserService userService)
+        public UserController(
+            IUserService userService,
+            IAuthService authService,
+            IRegisterService registerService)
         {
             _userService = userService;
+            _authService = authService;
+            _registerService = registerService;
         }
 
         [HttpGet]
@@ -67,5 +74,44 @@ namespace AsyncJsonWeb.Controllers
                 return NotFound($"Пользователь с ID={id} не найден.");
             return Ok($"Пользователь ID={id} удалён.");
         }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<User>> Login([FromBody] LoginRequest request)
+        {
+            if (request == null)
+                return BadRequest("Тело запроса пустое.");
+
+            var user = await _authService.LoginAsync(request.Login, request.Password);
+            if (user == null)
+                return Unauthorized("Неверный логин или пароль.");
+
+            return Ok(user);
+        }
+
+        [HttpPost("register")]
+        public async Task<ActionResult<User>> Register([FromBody] RegisterRequest request)
+        {
+            if (request == null)
+                return BadRequest("Тело запроса пустое.");
+
+            var user = await _registerService.RegisterAsync(request.Login, request.Email, request.Password);
+            if (user == null)
+                return Conflict("Логин или email уже заняты, либо данные некорректные.");
+
+            return Ok(user);
+        }
+
+    }
+    public class LoginRequest
+    {
+        public string Login { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+
+    public class RegisterRequest
+    {
+        public string Login { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 }

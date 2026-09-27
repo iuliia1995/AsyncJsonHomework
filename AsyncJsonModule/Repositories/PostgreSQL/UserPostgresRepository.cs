@@ -138,5 +138,47 @@ namespace AsyncJsonModule.Repositories.PostgreSQL
         {
             return Task.CompletedTask;
         }
+
+        // ДЛЯ АВТОРИЗАЦИИ
+        public async Task<User?> GetByLoginAsync(string login)
+        {
+            try
+            {
+                using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                string sql = @"SELECT id, login, email, password
+                               FROM ""Users""
+                               WHERE login = @Login";
+
+                return await connection.QueryFirstOrDefaultAsync<User>(sql, new { Login = login });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[POSTGRES] Ошибка поиска пользователя по логину '{login}': {ex.Message}");
+                return null;
+            }
+        }
+
+        // ДЛЯ РЕГИСТРАЦИИ
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            try
+            {
+                using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                string sql = @"SELECT id, login, email, password
+                               FROM ""Users""
+                               WHERE email = @Email";
+
+                return await connection.QueryFirstOrDefaultAsync<User>(sql, new { Email = email });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[POSTGRES] Ошибка поиска пользователя по email '{email}': {ex.Message}");
+                return null;
+            }
+        }
     }
 }

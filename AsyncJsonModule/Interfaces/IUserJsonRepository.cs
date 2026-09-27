@@ -13,5 +13,8 @@ namespace AsyncJsonModule.Repositories
         Task<bool> UpdateUserByIdAsync(Guid id, string email, string login, string password);
         Task<bool> DeleteUserByIdAsync(Guid id);
         Task SaveUsersAsync(List<User> users);
+
+        Task<User?> GetByLoginAsync(string login);
+        Task<User?> GetByEmailAsync(string email);
     }
 }
