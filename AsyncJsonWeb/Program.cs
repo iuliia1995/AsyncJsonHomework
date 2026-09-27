@@ -2,6 +2,7 @@ using AsyncJsonModule.Interfaces;
 using AsyncJsonModule.Repositories;
 using AsyncJsonModule.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -25,6 +26,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
 app.UseAuthorization();
 app.MapControllers();
 

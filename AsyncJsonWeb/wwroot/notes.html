@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заметки — AsyncJsonWeb</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>AsyncJsonWeb</h1>
+        <nav>
+            <a href="index.html">Главная</a>
+            <a href="users.html">Пользователи</a>
+            <a href="notes.html" class="active">Заметки</a>
+            <a href="events.html">События</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Заметки</h2>
+
+        <div class="alert alert-info">
+            GET /api/note — получить все заметки
+        </div>
+
+        <!-- Форма добавления -->
+        <form>
+            <h3 style="margin-bottom: 16px;">Добавить заметку</h3>
+
+            <div class="form-group">
+                <label for="title">Название</label>
+                <input type="text" id="title" placeholder="Название заметки">
+            </div>
+
+            <div class="form-group">
+                <label for="content">Содержимое</label>
+                <textarea id="content" rows="4" placeholder="Текст заметки..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="ownerId">ID владельца</label>
+                <input type="number" id="ownerId" placeholder="1" min="1">
+            </div>
+
+            <button type="button" class="btn btn-success">Добавить</button>
+        </form>
+
+        <!-- Таблица заметок -->
+        <h3 style="margin-top: 30px; margin-bottom: 10px;">Список заметок</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Содержимое</th>
+                    <th>ID владельца</th>
+                    <th>Создано</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Тестовая заметка</td>
+                    <td>Проверка сервисного слоя</td>
+                    <td>1</td>
+                    <td>19.09.2026</td>
+                    <td>
+                        <button class="btn btn-warning" style="padding: 6px 12px;">Изм.</button>
+                        <button class="btn btn-danger" style="padding: 6px 12px;">Удал.</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Поиск заметок по владельцу -->
+        <div class="card" style="margin-top: 30px;">
+            <h3>Заметки по владельцу</h3>
+            <p style="opacity: 0.7; margin-bottom: 12px;">Найти все заметки конкретного пользователя</p>
+
+            <div class="form-group">
+                <label for="ownerIdSearch">ID владельца</label>
+                <input type="number" id="ownerIdSearch" placeholder="1" min="1">
+            </div>
+
+            <button type="button" class="btn btn-primary">Найти</button>
+            <button type="button" class="btn btn-danger">Удалить все его заметки</button>
+        </div>
+
+        <div class="card" style="margin-top: 30px;">
+            <h3>API эндпоинты для работы с заметками</h3>
+            <ul style="margin-top: 12px; margin-left: 20px; opacity: 0.85;">
+                <li><strong>GET</strong> /api/note — все заметки</li>
+                <li><strong>GET</strong> /api/note/{id} — заметка по ID</li>
+                <li><strong>POST</strong> /api/note — создать</li>
+                <li><strong>PUT</strong> /api/note/{id} — обновить</li>
+                <li><strong>DELETE</strong> /api/note/{id} — удалить</li>
+                <li><strong>GET</strong> /api/note/owner/{ownerId} — заметки владельца</li>
+                <li><strong>DELETE</strong> /api/note/owner/{ownerId} — удалить заметки владельца</li>
+            </ul>
+        </div>
+    </main>
+</body>
+</html>
+</html>

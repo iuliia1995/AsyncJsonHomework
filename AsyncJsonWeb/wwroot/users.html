@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пользователи — AsyncJsonWeb</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>AsyncJsonWeb</h1>
+        <nav>
+            <a href="index.html">Главная</a>
+            <a href="users.html" class="active">Пользователи</a>
+            <a href="notes.html">Заметки</a>
+            <a href="events.html">События</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Пользователи</h2>
+
+        <div class="alert alert-info">
+            GET /api/user — получить всех пользователей
+        </div>
+
+        <!-- Форма добавления -->
+        <form>
+            <h3 style="margin-bottom: 16px;">Добавить пользователя</h3>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="example@mail.ru">
+            </div>
+
+            <div class="form-group">
+                <label for="login">Логин</label>
+                <input type="text" id="login" placeholder="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" placeholder="••••••••">
+            </div>
+
+            <button type="button" class="btn btn-success">Добавить</button>
+        </form>
+
+        <!-- Таблица пользователей -->
+        <h3 style="margin-top: 30px; margin-bottom: 10px;">Список пользователей</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Логин</th>
+                    <th>Пароль</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>ivan@mail.ru</td>
+                    <td>ivanzolo2004</td>
+                    <td>........</td>
+                    <td>
+                        <button class="btn btn-warning" style="padding: 6px 12px;">Изм.</button>
+                        <button class="btn btn-danger" style="padding: 6px 12px;">Удал.</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>roma@mail.ru</td>
+                    <td>roman_romashka</td>
+                    <td>........</td>
+                    <td>
+                        <button class="btn btn-warning" style="padding: 6px 12px;">Изм.</button>
+                        <button class="btn btn-danger" style="padding: 6px 12px;">Удал.</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="card" style="margin-top: 30px;">
+            <h3>API эндпоинты для работы с пользователями</h3>
+            <ul style="margin-top: 12px; margin-left: 20px; opacity: 0.85;">
+                <li><strong>GET</strong> /api/user — все пользователи</li>
+                <li><strong>GET</strong> /api/user/{id} — пользователь по ID</li>
+                <li><strong>POST</strong> /api/user — создать</li>
+                <li><strong>PUT</strong> /api/user/{id} — обновить</li>
+                <li><strong>DELETE</strong> /api/user/{id} — удалить</li>
+            </ul>
+        </div>
+    </main>
+</body>
+</html>
