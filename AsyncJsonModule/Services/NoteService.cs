@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AsyncJsonModule.Interfaces;
 using AsyncJsonModule.Models;
+using AsyncJsonModule.Repositories;
 
 namespace AsyncJsonModule.Services
 {
